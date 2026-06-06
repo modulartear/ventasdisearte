@@ -1,0 +1,41 @@
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a26;
+  --surface3: #22223a;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.15);
+  --accent: #4f7cff;
+  --accent2: #00e5a0;
+  --accent-dim: rgba(79,124,255,0.12);
+  --text: #f0f0f5;
+  --text2: #8888a0;
+  --danger: #ff4f6a;
+  --warning: #ffaa00;
+  --success: #00e5a0;
+  --mono: 'DM Mono', monospace;
+  --display: 'Syne', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--display);
+}
+
+input, select, button, textarea { font-family: var(--display); }
+
+@keyframes pulse  { 0%,100%{opacity:1} 50%{opacity:0.3} }
+@keyframes spin   { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+@keyframes slide  { 0%{transform:translateX(-100%)} 100%{transform:translateX(350%)} }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes blink  { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
