@@ -2,7 +2,6 @@
 // Proxy seguro para Apify. La API key nunca sale al browser.
 
 export default async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
@@ -12,13 +11,20 @@ export default async function handler(req, res) {
   const apiKey = process.env.APIFY_API_KEY
   if (!apiKey) return res.status(500).json({ error: 'APIFY_API_KEY no configurada en Vercel' })
 
-  // El path de Apify viene en el query param `path`
-  // ej: /api/apify?path=acts/compass~crawler-google-places/runs
   const apifyPath = req.query.path
   if (!apifyPath) return res.status(400).json({ error: 'Falta el parámetro path' })
 
-  // Construir URL destino, inyectando la key desde el servidor
-  const targetUrl = `https://api.apify.com/v2/${apifyPath}?token=${apiKey}`
+  // Separar el path base de los query params que vengan dentro del path
+  // ej: "datasets/abc123/items?clean=true" → path="datasets/abc123/items" + qs="clean=true"
+  const [basePath, inlineQuery] = apifyPath.split('?')
+
+  // Armar query string final: token siempre + lo que venga del path
+  const qs = new URLSearchParams({ token: apiKey })
+  if (inlineQuery) {
+    new URLSearchParams(inlineQuery).forEach((v, k) => qs.set(k, v))
+  }
+
+  const targetUrl = `https://api.apify.com/v2/${basePath}?${qs.toString()}`
 
   try {
     const fetchOptions = {
